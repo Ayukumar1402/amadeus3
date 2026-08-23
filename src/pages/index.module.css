@@ -1,0 +1,206 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--board-ink);
+  color: #e7e9ee;
+  padding: 5rem 0 3.75rem;
+}
+
+/* Slowly drifting radar-sweep / beacon glow behind the hero copy — blue
+   field with a yellow beacon, echoing runway lighting. Pure CSS, GPU-cheap
+   (background-position only), and paused entirely under reduced-motion. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  background:
+    radial-gradient(520px 320px at 12% 20%, rgba(255, 212, 0, 0.16), transparent 65%),
+    radial-gradient(620px 420px at 88% 10%, rgba(47, 92, 224, 0.35), transparent 60%),
+    radial-gradient(700px 500px at 50% 120%, rgba(30, 58, 138, 0.4), transparent 65%);
+  animation: hero-drift 16s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes hero-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-1.5%, 1.5%, 0) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none; }
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  max-width: 42rem;
+  font-size: 1.15rem;
+  color: #c7cbd6;
+  margin: 0.5rem 0 2rem;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.primaryCta {
+  display: inline-block;
+  background: var(--board-yellow);
+  color: var(--board-ink) !important;
+  font-weight: 700;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition: transform var(--flap-transition), box-shadow var(--flap-transition);
+  box-shadow: 0 0 0 0 rgba(255, 212, 0, 0.45);
+}
+
+.primaryCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 212, 0, 0.35);
+}
+
+.hotkeyHint {
+  font-size: 0.85rem;
+  color: #9aa0ad;
+}
+
+.hotkeyHint kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.gridHeading {
+  margin-top: 3rem;
+}
+
+.topicIcon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.6rem;
+  display: block;
+  transition: transform 220ms ease;
+}
+
+.topic-card:hover .topicIcon {
+  transform: translateY(-2px) scale(1.08);
+}
+
+.workflowCaption {
+  color: var(--board-slate);
+  max-width: 40rem;
+  margin: 0.35rem 0 1.25rem;
+}
+
+.workflowFrame {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 212, 0, 0.25);
+  line-height: 0;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.workflowFrame:hover {
+  border-color: rgba(255, 212, 0, 0.55);
+  box-shadow: 0 12px 32px rgba(30, 58, 138, 0.18);
+}
+
+.workflowImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chipSpacing {
+  margin-top: 0.9rem;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2.5rem 0 0.5rem;
+}
+
+.statCard {
+  padding: 1.1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: transform 220ms ease, border-color 220ms ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 212, 0, 0.4);
+}
+
+.statNumber {
+  font-family: var(--ifm-heading-font-family);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--board-yellow);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.82rem;
+  color: #9aa0ad;
+  margin-top: 0.35rem;
+}
+
+.contribute {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 4rem;
+  padding: 1.75rem 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 212, 0, 0.12), rgba(47, 92, 224, 0.12));
+  border: 1px solid rgba(255, 212, 0, 0.3);
+}
+
+.contributeTitle {
+  margin: 0 0 0.4rem;
+}
+
+.contributeText {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--board-slate);
+}
+
+.secondaryCta {
+  flex-shrink: 0;
+  display: inline-block;
+  border: 1px solid var(--board-yellow-dim);
+  color: var(--board-yellow-dim) !important;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none !important;
+  font-weight: 600;
+  transition: background var(--flap-transition), color var(--flap-transition), transform var(--flap-transition);
+}
+
+[data-theme='dark'] .secondaryCta {
+  border-color: var(--board-yellow);
+  color: var(--board-yellow) !important;
+}
+
+.secondaryCta:hover {
+  background: var(--board-yellow);
+  color: var(--board-ink) !important;
+  transform: translateY(-2px);
+}

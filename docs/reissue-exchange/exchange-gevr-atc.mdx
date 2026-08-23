@@ -1,0 +1,88 @@
+---
+sidebar_position: 1
+title: Exchange with GEVR (ATC)
+description: Reissue and exchange flow when the ticket is ATC-eligible through the Amadeus GEVR Shopper script.
+---
+
+import FlapHeader from '@site/src/components/FlapHeader';
+import CommandTable from '@site/src/components/CommandTable';
+import Admonition from '@theme/Admonition';
+
+<FlapHeader eyebrow="Reissue & Exchange · Scenario 1 of 5" text="Exchange with GEVR (ATC)" icon="/img/topics/reissue-exchange.svg" />
+
+[← Back to Reissue & Exchange overview](/reissue-exchange)
+
+Use the GEVR Shopper script when the ticket is ATC-eligible — Amadeus prices and guarantees the
+fare automatically, which is faster and lower-risk than a manual reprice.
+
+<Admonition type="tip" title="Before you launch GEVR">
+
+1. Coupon status must be **Open (O)** or **Airport Control (A)**. If it's **Check-in (CKIN)**,
+   go to *Flight | Change | Change flight with status CKIN or C* first to see if it can be
+   reopened.
+2. Run the **Eligibility checker**. "Yes" means changes are permitted and the fare is guaranteed —
+   continue. "Check Fare rules" means the script can't determine eligibility — for Pre-travel/FTC
+   use the GEVR **Manual** flow instead; for a partial ticket use **Informative Pricing** outside
+   GEVR.
+3. **SWA WGA (Basic) fares:** check mini rules first. For tickets issued on/after May 28, WGA
+   change eligibility only covers Credit redemptions, not Voluntary Change.
+
+</Admonition>
+
+```mermaid
+flowchart TD
+    A[Launch GEVR Shopper] --> B{Coupon status<br/>O or A?}
+    B -->|CKIN| B2[Try to reopen via<br/>Change flight with status CKIN/C]
+    B -->|O or A| C{Eligibility checker}
+    C -->|No| Z[Exit — read fare rules for cancel options]
+    C -->|Check fare rules| C2[Use GEVR Manual or<br/>Informative Pricing instead]
+    C -->|Yes, guaranteed| D[Select Exchange]
+    D --> E{Ticket validity<br/>within 1 year?}
+    E -->|Flagged red| E2[Review fare rules for validity]
+    E -->|OK| F[Select flights to modify: Change / Keep / Remove]
+    F --> G[Set Fare Types — keep Public + Private selected<br/>WN: Economy cabin, Same fare family]
+    G --> H[Review availability — quote Add Collect column only]
+    H --> I{Traveler agrees to proceed?}
+    I -->|No| Z2[Exit GEVR, delete new flights, RF;ER to save]
+    I -->|Yes| J[Select flight, click Book]
+    J --> K[Select Price → review new segments]
+    K --> L[Click OK — do not edit, this reconfirms price]
+    L --> M[Add Form of Payment — Published card / Merchant cash / EVC card]
+    M --> N{Traveler accepts summary?}
+    N -->|No| Z3[Exit GEVR — IR, delete new flights, RF;ER]
+    N -->|Yes| O[I accept — charges card / removes old segments]
+    O --> P[Queue place the PNR]
+    P --> Q{Residual value present?}
+    Q -->|Yes, remarks + FO *RV both present| R[Advise traveler of residual T&Cs, send email]
+    Q -->|No| S[Document in OneDesk / Voyager Classic]
+    R --> S
+```
+
+> **Screenshot placeholder:** the source material references a screenshot of the ticket-validity
+> warning here (tickets past one-year validity shown in red). Add the image to `static/img/` and
+> embed it with `![Ticket validity warning](/img/gevr-ticket-validity.png)` when available.
+
+<CommandTable rows={[
+  {
+    command: 'Automatic Basic Refund — N/A here',
+    purpose: 'Not used in this flow — listed for contrast only. GEVR ATC quotes from the Add Collect column, which is priced and guaranteed by Amadeus.',
+    example: 'Add Collect column',
+    commonErrors: 'If a Residual Value column also appears, note the amount internally but do not quote it to the traveler — it can\u2019t be confirmed yet whether it\u2019s an MCO/EMD or lost value.',
+  },
+  {
+    command: 'RF<SSO login>;ER',
+    purpose: 'Add remarks and save changes when exiting GEVR without completing the exchange (e.g. traveler declines, or a card fails with no alternative).',
+    example: 'RFSMITHJ;ER',
+    commonErrors: 'For Neutral Availability exits, you must also manually delete the newly added flights — Neutral Availability saves them, unlike ATC Shopper.',
+  },
+]} />
+
+<Admonition type="info" title="Residual value — only quote if both fields are present">
+
+Check the remarks field for the EVR script\u2019s residual notes **and** display the FO line for a
+`*RV` field. Both must be present for the residual to apply. If only one shows, don\u2019t quote a
+residual to the traveler. When it does apply: no change fee to use it, it\u2019s non-transferable
+(same passenger only), and — absent a specific fare-rule validity period — assume it must be
+booked and used within 1 year of creation.
+
+</Admonition>

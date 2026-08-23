@@ -1,0 +1,417 @@
+/**
+ * Design system: "Departure Board"
+ * Grounded in the subject: agents live inside a GDS command line all day,
+ * and this site is a lookup tool used the way a gate agent glances at a
+ * split-flap board — fast, high-contrast, unambiguous.
+ * Deep runway-night blue for the console, signal-yellow as the single
+ * accent (the color of an airport beacon), teal/coral reserved strictly
+ * for status (valid/error) so they carry meaning, never decoration.
+ */
+
+:root {
+  /* ---- Color tokens ---- */
+  --board-ink: #0a1128;
+  --board-ink-raised: #101a3d;
+  --board-ink-raised-2: #16214a;
+  --board-paper: #f4f6fb;
+  --board-paper-raised: #ffffff;
+  --board-yellow: #ffd400;
+  --board-yellow-dim: #a37e00;
+  --board-blue: #1e3a8a;
+  --board-blue-bright: #2f5ce0;
+  --board-teal: #17b6a7;
+  --board-coral: #ff5a5f;
+  --board-ink-text: #131a2e;
+  --board-slate: #5b6472;
+
+  --ifm-color-primary: var(--board-yellow-dim);
+  --ifm-color-primary-dark: #8a6b00;
+  --ifm-color-primary-darker: #816400;
+  --ifm-color-primary-darkest: #6a5200;
+  --ifm-color-primary-light: #bc9100;
+  --ifm-color-primary-lighter: #c69900;
+  --ifm-color-primary-lightest: #e0ac00;
+
+  --ifm-background-color: var(--board-paper);
+  --ifm-font-color-base: var(--board-ink-text);
+  --ifm-code-font-size: 90%;
+  --ifm-navbar-background-color: var(--board-ink);
+  --ifm-footer-background-color: var(--board-ink);
+  --ifm-link-color: var(--board-blue-bright);
+
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ifm-heading-font-family: 'Space Grotesk', var(--ifm-font-family-base);
+  --ifm-font-family-monospace: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  --docusaurus-highlighted-code-line-bg: rgba(255, 212, 0, 0.15);
+
+  --flap-transition: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme='dark'] {
+  --ifm-background-color: var(--board-ink);
+  --ifm-background-surface-color: var(--board-ink-raised);
+  --ifm-font-color-base: #e9ecf7;
+  --ifm-color-primary: var(--board-yellow);
+  --ifm-color-primary-dark: #e6c000;
+  --ifm-color-primary-darker: #d9b500;
+  --ifm-color-primary-darkest: #b29500;
+  --ifm-color-primary-light: #ffd91a;
+  --ifm-color-primary-lighter: #ffdd33;
+  --ifm-color-primary-lightest: #ffe666;
+  --ifm-link-color: #6fa2ff;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 212, 0, 0.18);
+}
+
+/* ---- Ambient console texture (dark mode only) ----
+   Faint scanlines + a slowly drifting aurora of blue and yellow glow,
+   echoing runway lighting at night. Subtle and slow so it never
+   competes with content or distracts mid-lookup. */
+[data-theme='dark'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.014) 0px,
+      rgba(255, 255, 255, 0.014) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(
+      ellipse 900px 500px at 20% -10%,
+      rgba(255, 212, 0, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 800px 480px at 85% 0%,
+      rgba(47, 92, 224, 0.16),
+      transparent 62%
+    );
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 0 0, 40px 30px, -30px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme='dark'] body::before { animation: none; }
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 { letter-spacing: -0.02em; }
+
+code {
+  font-family: var(--ifm-font-family-monospace);
+  background: rgba(255, 212, 0, 0.1);
+  border: 1px solid rgba(255, 212, 0, 0.3);
+}
+
+a {
+  transition: color 150ms ease;
+}
+
+/* ---- Signature element: the split-flap header on every topic page ----
+   A short flip animation plays once on load, echoing an airport board
+   locking in a new destination. Kept to one element, not scattered, and
+   respects reduced-motion. */
+.flap-header {
+  display: inline-block;
+  perspective: 600px;
+}
+
+.flap-header__row {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.flap-char {
+  background: var(--board-ink);
+  color: var(--board-yellow);
+  font-family: var(--ifm-font-family-monospace);
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 0.5em 0.15em 0.4em;
+  border-radius: 3px;
+  min-width: 1em;
+  text-align: center;
+  transform-origin: center;
+  animation: flap-in var(--flap-transition) both;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(255, 212, 0, 0.12);
+}
+
+@keyframes flap-in {
+  0% { transform: rotateX(90deg); opacity: 0; }
+  60% { transform: rotateX(-8deg); opacity: 1; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-char { animation: none; }
+}
+
+/* ---- Page/section transitions: fast fade+lift, never a slow crossfade ---- */
+.fade-section {
+  animation: fade-lift 180ms ease-out both;
+}
+
+@keyframes fade-lift {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-section { animation: none; }
+}
+
+/* ---- Scroll-reveal: elements animate in as they enter the viewport.
+   JS (src/clientModules/scrollReveal.ts) toggles .is-visible; the CSS
+   below defines the hidden -> visible transition. Progressive enhancement:
+   with JS disabled everything is just visible (see fallback rule). ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html:not(.js-scroll-reveal) .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---- Terminal cursor accent (hero subtitle) ---- */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 0.15em;
+  background: var(--board-yellow);
+  vertical-align: -0.15em;
+  animation: cursor-blink 1.1s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor { animation: none; opacity: 1; }
+}
+
+/* ---- Status chips used in command tables ---- */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.status-chip--valid {
+  background: rgba(23, 182, 167, 0.12);
+  color: var(--board-teal);
+  border: 1px solid rgba(23, 182, 167, 0.35);
+}
+
+.status-chip--error {
+  background: rgba(255, 90, 95, 0.1);
+  color: var(--board-coral);
+  border: 1px solid rgba(255, 90, 95, 0.35);
+}
+
+/* ---- Topic landing cards on the homepage ---- */
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.topic-card {
+  display: block;
+  padding: 1.25rem 1.25rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--board-paper-raised);
+  text-decoration: none !important;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--flap-transition), box-shadow var(--flap-transition),
+    border-color var(--flap-transition);
+}
+
+.topic-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255, 212, 0, 0.14) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 550ms ease;
+  pointer-events: none;
+}
+
+.topic-card:hover::after {
+  transform: translateX(120%);
+}
+
+[data-theme='dark'] .topic-card {
+  background: var(--board-ink-raised);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.topic-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  border-color: var(--board-yellow);
+  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.18);
+}
+
+[data-theme='dark'] .topic-card:hover {
+  box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.4), 0 10px 32px rgba(255, 212, 0, 0.14),
+    0 12px 40px rgba(47, 92, 224, 0.22);
+}
+
+[data-theme='dark'] .topic-card:hover .topic-card__title {
+  color: var(--board-yellow);
+}
+
+.topic-card__eyebrow {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--board-yellow-dim);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+[data-theme='dark'] .topic-card__eyebrow {
+  color: var(--board-yellow);
+}
+
+.topic-card__title {
+  font-family: var(--ifm-heading-font-family);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+  transition: color 200ms ease;
+}
+
+.topic-card__desc {
+  font-size: 0.88rem;
+  color: var(--board-slate);
+  margin: 0;
+}
+
+/* ---- Navbar: subtle animated underline on the active/hover link ---- */
+.navbar__link {
+  position: relative;
+}
+
+.navbar__link::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.1rem;
+  height: 2px;
+  background: var(--board-yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease;
+}
+
+.navbar__link:hover::before,
+.navbar__link--active::before {
+  transform: scaleX(1);
+}
+
+.theme-admonition {
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+/* Re-skin admonition color variants to sit inside the blue/yellow palette
+   instead of Infima's default green/red/blue, while keeping tip vs warning
+   vs danger visually distinct so meaning still reads at a glance. */
+.alert--success {
+  --ifm-alert-background-color: rgba(255, 212, 0, 0.1);
+  --ifm-alert-border-color: rgba(255, 212, 0, 0.55);
+  --ifm-alert-color: var(--ifm-font-color-base);
+}
+
+.alert--info {
+  --ifm-alert-background-color: rgba(47, 92, 224, 0.12);
+  --ifm-alert-border-color: rgba(47, 92, 224, 0.5);
+  --ifm-alert-color: var(--ifm-font-color-base);
+}
+
+.alert--warning {
+  --ifm-alert-background-color: rgba(255, 159, 28, 0.12);
+  --ifm-alert-border-color: rgba(255, 159, 28, 0.5);
+  --ifm-alert-color: var(--ifm-font-color-base);
+}
+
+.alert--danger {
+  --ifm-alert-background-color: rgba(255, 90, 95, 0.1);
+  --ifm-alert-border-color: rgba(255, 90, 95, 0.5);
+  --ifm-alert-color: var(--ifm-font-color-base);
+}
+
+.alert--secondary {
+  --ifm-alert-background-color: rgba(23, 182, 167, 0.1);
+  --ifm-alert-border-color: rgba(23, 182, 167, 0.45);
+  --ifm-alert-color: var(--ifm-font-color-base);
+}
+
+/* ---- Sidebar: gentle highlight bar on the active item ---- */
+.menu__link--active:not(.menu__link--sublist) {
+  position: relative;
+}
+
+.menu__link--active:not(.menu__link--sublist)::before {
+  content: '';
+  position: absolute;
+  left: -0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--board-yellow);
+  border-radius: 2px;
+}
+
+/* ---- Buttons: consistent lift across hero/CTA buttons ---- */
+.button {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}

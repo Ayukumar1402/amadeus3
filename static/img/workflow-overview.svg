@@ -1,0 +1,74 @@
+<svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#ffb020"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="980" height="300" rx="14" fill="#10151f"/>
+  <rect x="1" y="1" width="978" height="298" rx="13" fill="none" stroke="#ffb020" stroke-opacity="0.25"/>
+
+  <text x="26" y="34" fill="#a66c14" font-size="11" letter-spacing="2">A CALL, START TO FINISH</text>
+
+  <!-- Main line: 5 steps -->
+  <g stroke="#ffb020" stroke-width="2" fill="none">
+    <line x1="90"  y1="150" x2="230" y2="150" marker-end="url(#arrow)"/>
+    <line x1="330" y1="150" x2="470" y2="150" marker-end="url(#arrow)"/>
+    <line x1="570" y1="150" x2="710" y2="150" marker-end="url(#arrow)"/>
+    <line x1="810" y1="150" x2="890" y2="150" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Step nodes -->
+  <g font-size="13" fill="#e7e9ee">
+    <rect x="10"  y="120" width="80" height="60" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1.5"/>
+    <text x="50" y="146" text-anchor="middle" fill="#ffb020" font-size="11">01</text>
+    <text x="50" y="163" text-anchor="middle" font-size="11">PNR</text>
+
+    <rect x="230" y="120" width="100" height="60" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1.5"/>
+    <text x="280" y="146" text-anchor="middle" fill="#ffb020" font-size="11">02</text>
+    <text x="280" y="163" text-anchor="middle" font-size="11">Fare &amp; Price</text>
+
+    <rect x="470" y="120" width="100" height="60" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1.5"/>
+    <text x="520" y="146" text-anchor="middle" fill="#ffb020" font-size="11">03</text>
+    <text x="520" y="163" text-anchor="middle" font-size="11">Ticketing</text>
+
+    <rect x="710" y="120" width="100" height="60" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1.5"/>
+    <text x="760" y="140" text-anchor="middle" fill="#ffb020" font-size="11">04</text>
+    <text x="760" y="157" text-anchor="middle" font-size="10">Reissue /</text>
+    <text x="760" y="170" text-anchor="middle" font-size="10">Exchange</text>
+
+    <rect x="890" y="120" width="80" height="60" rx="8" fill="#171e2b" stroke="#0e7c7b" stroke-width="1.5"/>
+    <text x="930" y="146" text-anchor="middle" fill="#4fd6d4" font-size="11">05</text>
+    <text x="930" y="163" text-anchor="middle" font-size="11">Refund</text>
+  </g>
+
+  <!-- Branch: seat maps off ticketing -->
+  <g stroke="#ffb020" stroke-width="1.5" fill="none" stroke-dasharray="3 3">
+    <path d="M520 120 L520 60 L620 60" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="10" fill="#e7e9ee">
+    <rect x="620" y="34" width="120" height="46" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1"/>
+    <text x="680" y="52" text-anchor="middle" fill="#ffb020" font-size="10">06</text>
+    <text x="680" y="66" text-anchor="middle" font-size="10">Seats &amp; Add-ons</text>
+  </g>
+
+  <!-- Branch: queue mgmt underneath, connects to PNR + ticketing -->
+  <g stroke="#ffb020" stroke-width="1.5" fill="none" stroke-dasharray="3 3">
+    <path d="M50 180 L50 240 L520 240 L520 180" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="10" fill="#e7e9ee">
+    <rect x="10" y="215" width="110" height="46" rx="8" fill="#171e2b" stroke="#ffb020" stroke-width="1"/>
+    <text x="65" y="234" text-anchor="middle" fill="#ffb020" font-size="10">07</text>
+    <text x="65" y="248" text-anchor="middle" font-size="10">Queue Mgmt</text>
+  </g>
+
+  <!-- Error codes: reference at any stage -->
+  <g font-size="10" fill="#e7e9ee">
+    <rect x="820" y="215" width="150" height="46" rx="8" fill="#171e2b" stroke="#d1432b" stroke-width="1"/>
+    <text x="895" y="234" text-anchor="middle" fill="#e8735f" font-size="10">08 · reference</text>
+    <text x="895" y="248" text-anchor="middle" font-size="10">Error Codes — any stage</text>
+  </g>
+  <g stroke="#d1432b" stroke-width="1.5" fill="none" stroke-dasharray="2 4">
+    <path d="M760 180 L760 205 L895 205 L895 215" marker-end="url(#arrow)"/>
+  </g>
+</svg>

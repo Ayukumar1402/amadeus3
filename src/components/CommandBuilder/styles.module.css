@@ -1,0 +1,121 @@
+.builder {
+  border: 1px solid rgba(255, 176, 32, 0.35);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem 1.4rem;
+  margin: 1.75rem 0;
+  background: linear-gradient(180deg, rgba(255, 176, 32, 0.06), transparent 60%);
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--board-yellow-dim);
+  margin-bottom: 0.25rem;
+}
+
+[data-theme='dark'] .eyebrow {
+  color: var(--board-yellow);
+}
+
+.title {
+  margin: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.1rem;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  font-weight: 600;
+  gap: 0.35rem;
+  color: var(--board-slate);
+}
+
+.input {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: var(--board-paper-raised);
+  color: var(--board-ink-text);
+}
+
+[data-theme='dark'] .input {
+  background: var(--board-ink);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e7e9ee;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--board-yellow);
+  outline-offset: 1px;
+}
+
+.hint {
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--board-slate);
+  opacity: 0.8;
+}
+
+.readout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--board-ink);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+}
+
+.readoutCode {
+  background: transparent !important;
+  border: none !important;
+  color: var(--board-yellow) !important;
+  font-size: 1.05rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--board-yellow);
+  background: var(--board-yellow);
+  color: var(--board-ink);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.copyBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.copyBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.placeholderNote, .note {
+  font-size: 0.78rem;
+  color: var(--board-slate);
+  margin: 0.6rem 0 0;
+}

@@ -1,0 +1,109 @@
+.tableWrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+}
+
+[data-theme='dark'] .tableWrap {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.table th {
+  text-align: left;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--board-slate);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='dark'] .table th {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.row {
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .row {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.row:hover {
+  background: rgba(255, 176, 32, 0.06);
+}
+
+[data-theme='dark'] .row:hover {
+  background: rgba(255, 176, 32, 0.09);
+  box-shadow: inset 3px 0 0 var(--board-yellow);
+}
+
+.table td {
+  padding: 0.7rem 1rem;
+  vertical-align: middle;
+}
+
+.exampleCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.copyBtn {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--board-yellow-dim);
+  background: transparent;
+  color: var(--board-yellow-dim);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+[data-theme='dark'] .copyBtn {
+  border-color: var(--board-yellow);
+  color: var(--board-yellow);
+}
+
+.copyBtn:hover {
+  background: var(--board-yellow);
+  color: var(--board-ink);
+}
+
+.chevronCell {
+  text-align: right;
+  width: 2rem;
+  color: var(--board-slate);
+}
+
+.chevron, .chevronOpen {
+  display: inline-block;
+  transition: transform var(--flap-transition);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.detailRow td {
+  background: rgba(209, 67, 43, 0.04);
+  padding: 0.6rem 1rem 1rem;
+}
+
+.detailText {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  color: var(--board-slate);
+}
